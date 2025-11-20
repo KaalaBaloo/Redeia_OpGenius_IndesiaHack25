@@ -53,38 +53,41 @@
 
 
     <div class="breadcrumb">
-        Inicio <span>&gt;</span> OpGenius <span>&gt;</span> Sala de Estudio <span>&gt;</span> Autoevaluación
+        Inicio <span>&gt;</span> OpGenius <span>&gt;</span> Retos <span>&gt;</span> Simulación
     </div>
 
     <section class="hero">
         <div class="hero-title-bar">
-            Autoevaluación
+            Simulación
         </div>
     </section>
 
     <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="quiz">
-            <div class="card">
-                <div class="header">
-                    <div class="circle" id="question-number">?</div>
-                    <h1 id="quiz-topic">Cargando Tópico...</h1>
-                </div>
-
-                <div id="loading-message" class="alert alert-info text-center" role="alert">
-                    Generando pregunta con el LLM...
-                </div>
-                
-                <div id="quiz-content">
-                    </div>
-
-                <div class="d-grid gap-2 mt-4">
-                    <button id="next-question-btn" class="btn btn-primary" style="display:none;">
-                        Siguiente Pregunta
-                    </button>
-                </div>
-                
+        <div class="simulation" id="simulation-container">
+            
+            <div class="background" id="background-image-container">
+                <img src="../media/icons/BG_Image.png" alt="Control Room Background">
             </div>
+            
+            <div class="message" id="simulation-message">
+                Cargando simulación...
             </div>
+            
+            <div id="loading-spinner" style="position: absolute; top: 18%; left: 50%; transform: translateX(-50%); display: none;">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Pensando...</span>
+                </div>
+                <span class="text-white ms-2">Evaluando su acción...</span>
+            </div>
+
+            <div class="input-area">
+                <div class="bot-icon">
+                    <span>🤖</span>
+                </div>
+                <input type="text" id="user-input" placeholder="Indica el paso con el que quieres proceder">
+                <button class="send-button" id="send-action-btn">➤</button>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -96,7 +99,7 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
- <script type="text/javascript" charset="UTF-8" defer src="../js/quiz.js"></script>
+ <script type="text/javascript" charset="UTF-8" defer src="../js/simulation.js"></script>
 
 </body>
 </html>

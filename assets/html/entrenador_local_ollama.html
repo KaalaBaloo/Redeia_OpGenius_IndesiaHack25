@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador P.O. Local (Ollama)</title>
+    <style>
+        /* [MISMO CSS QUE ANTES] */
+        :root { --primary: #2c3e50; --accent: #e67e22; --bg: #ecf0f1; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 90%; max-width: 650px; text-align: center; }
+        
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        .badge { background: var(--primary); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        input, select { padding: 12px; margin: 10px 0; width: 100%; border: 2px solid #dfe6e9; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        input:focus, select:focus { border-color: var(--accent); outline: none; }
+
+        .btn { background: var(--accent); color: white; border: none; padding: 14px 24px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.2s; width: 100%; }
+        .btn:hover { background: #d35400; transform: translateY(-2px); }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; transform: none; }
+
+        .option-btn { display: block; width: 100%; margin: 10px 0; padding: 15px; background: white; border: 2px solid #dfe6e9; border-radius: 8px; cursor: pointer; text-align: left; font-size: 1rem; transition: 0.2s; color: #2c3e50; }
+        .option-btn:hover { border-color: var(--primary); background: #f8f9fa; }
+        
+        .correct { background: #27ae60 !important; color: white !important; border-color: #27ae60 !important; }
+        .incorrect { background: #c0392b !important; color: white !important; border-color: #c0392b !important; }
+        
+        .screen { display: none; animation: fadeIn 0.4s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Spinner */
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .status-log { font-family: monospace; color: #7f8c8d; font-size: 0.9rem; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="setup-screen" class="screen active">
+            <h1>Entrenador REE Local <span class="badge">Ollama</span></h1>
+            <p>Generación de preguntas sin internet</p>
+            
+            <label style="display:block; text-align:left; font-weight:bold; margin-top:15px;">P.O.s Específicos (separados por coma):</label>
+            <input type="text" id="specific-po" value="P.O. 1.1, P.O. 2.2, P.O. 3.3, P.O. 4.4" placeholder="Ej: P.O. 1.1, P.O. 2.2, P.O. 3.3, P.O. 4.4">
+            <label style="display:block; text-align:left; font-weight:bold; margin-top:15px;">Modelo Ollama:</label>
+            <input type="text" id="model-name" value="gemma3:12b" placeholder="Ej: gemma3:12b,">
+            
+            <label style="display:block; text-align:left; font-weight:bold; margin-top:15px;">Dificultad:</label>
+            <select id="difficulty">
+                <option value="Baja">Baja (Conceptos generales)</option>
+                <option value="Media">Media (Datos técnicos básicos)</option>
+                <option value="Alta">Alta (Tiempos, fórmulas y penalizaciones)</option>
+            </select>
+            
+            <br><br>
+            <button class="btn" onclick="startLocalGeneration()" id="btn-start">GENERAR PREGUNTAS</button>
+            
+            <div id="loading-area" style="display:none;">
+                <div class="loader"></div>
+                <p class="status-log" id="status-text">Conectando con tu cerebro local...</p>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <span id="progress-text" style="font-weight:bold; color:#7f8c8d;"></span>
+                <div style="background:var(--primary); color:white; padding:5px 10px; border-radius:15px; font-weight:bold;" id="score-badge">0 Pts</div>
+            </div>
+            
+            <h2 id="question-text" style="font-size:1.3rem; min-height:60px;"></h2>
+            <div id="options-container"></div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <h1>¡Entrenamiento Completado!</h1>
+            <p>Puntuación Final</p>
+            <div style="font-size: 4rem; font-weight:bold; color:var(--accent);" id="final-score">0</div>
+            <button class="btn" onclick="location.reload()" style="margin-top:20px;">Volver al Inicio</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        
+        // --- CONEXIÓN CON OLLAMA ---
+        async function startLocalGeneration() {
+            const model = document.getElementById('model-name').value;
+            const difficulty = document.getElementById('difficulty').value;
+            // NUEVA LÍNEA: Captura los P.O.s específicos
+            const specificPoList = document.getElementById('specific-po').value;
+            
+            document.getElementById('btn-start').style.display = 'none';
+            document.getElementById('loading-area').style.display = 'block';
+            updateStatus("Solicitando preguntas a " + model + "...");
+
+            const prompt = `
+            Genera un objeto JSON con 5 preguntas técnicas tipo test sobre los "Procedimientos de Operación (P.O.) del sistema eléctrico español".
+            
+            // LÍNEA MODIFICADA: Se añade la instrucción de filtrado
+            El contenido de las preguntas debe centrarse ÚNICAMENTE en estos P.O.: ${specificPoList}.
+            
+            Dificultad: ${difficulty}.
+            
+            Usa EXACTAMENTE este esquema JSON:
+            {
+                "preguntas": [
+                    {
+                        "po": "P.O. X.X", // Asegúrate que esta referencia caiga dentro de los P.O. solicitados.
+                        "texto": "¿Pregunta aquí?",
+                        "opciones": ["Opción A", "Opción B", "Opción C", "Opción D"],
+                        "correcta": 0,
+                        "dificultad": "${difficulty}"
+                    }
+                ]
+            }
+            IMPORTANTE: 
+            - "correcta" es el índice numérico (0, 1, 2 o 3).
+            - NO escribas texto introductorio, solo el JSON.
+            - Asegura datos técnicos reales.
+            `;
+
+            try {
+                const response = await fetch("http://localhost:11434/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [{ role: "user", content: prompt }],
+                        format: "json",
+                        stream: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Fallo de conexión. ¿Está Ollama corriendo con OLLAMA_ORIGINS='*'?");
+                }
+
+                updateStatus("Procesando respuesta...");
+                const data = await response.json();
+                
+                const contentObj = JSON.parse(data.message.content);
+                
+                if (!contentObj.preguntas || contentObj.preguntas.length === 0) {
+                    throw new Error("La IA no devolvió preguntas válidas.");
+                }
+
+                currentQuestions = contentObj.preguntas;
+                startGame();
+
+            } catch (error) {
+                alert("ERROR DE CONEXIÓN LOCAL: " + error.message + "\n\nAsegúrate de que Ollama está instalado y ejecutado con el permiso CORS.");
+                location.reload();
+            }
+        }
+
+        function updateStatus(msg) {
+            document.getElementById('status-text').innerText = msg;
+        }
+
+        // [ RESTO DE LÓGICA DEL JUEGO SIN CAMBIOS ]
+        function startGame() {
+            currentIndex = 0;
+            score = 0;
+            showScreen('quiz-screen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = currentQuestions[currentIndex];
+            
+            document.getElementById('progress-text').innerText = `Pregunta ${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('question-text').innerText = `[${q.po}] ${q.texto}`;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.opciones.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => handleAnswer(idx, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedIdx, btn) {
+            const q = currentQuestions[currentIndex];
+            const correctIdx = q.correcta;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            const pointsMap = { "Baja": 1, "Media": 2, "Alta": 3 };
+            const pointsToAdd = pointsMap[q.dificultad] || 1;
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedIdx === correctIdx) {
+                score += pointsToAdd;
+                btn.classList.add('correct');
+                btn.innerHTML += ` <span style="float:right; font-weight:bold;">+${pointsToAdd} PTS</span>`;
+            } else {
+                btn.classList.add('incorrect');
+                buttons[correctIdx].classList.add('correct');
+            }
+
+            document.getElementById('score-badge').innerText = score + " Pts";
+
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < currentQuestions.length) {
+                    loadQuestion();
+                } else {
+                    endGame();
+                }
+            }, 2000);
+        }
+
+        function endGame() {
+            showScreen('result-screen');
+            document.getElementById('final-score').innerText = score;
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
+</body>
+</html>

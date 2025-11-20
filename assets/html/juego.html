@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulación Operación Eléctrica</title>
+<style>
+ body { margin:0; font-family:Arial; background:#111; color:#fff; }
+ .bg { position:fixed; inset:0; background-size:cover; background-position:center; opacity:0.35; z-index:-1; }
+ #game { max-width:900px; margin:auto; padding:20px; background:rgba(0,0,0,0.65); border-radius:12px; margin-top:20px; }
+ h1{text-align:center;}
+ .header { background:rgba(255,255,255,0.15); padding:15px; border-radius:8px; margin-bottom:20px; }
+ .btn { padding:10px; background:#1976d2; border:none; color:white; width:100%; margin:8px 0; border-radius:6px; cursor:pointer; }
+ .btn:hover { background:#0f4c8d; }
+ #feedback { font-weight:bold; margin-top:10px; }
+ #score { text-align:center; font-size:20px; margin-bottom:15px; }
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+<div id="game">
+<h1>Simulación Operación Eléctrica</h1>
+<div id="score">Puntuación: 0 — Vidas: <span id="lives">3</span></div>
+<div class="header" id="header"></div>
+<p id="narrativa"></p>
+<h3 id="pregunta"></h3>
+<div id="opciones"></div>
+<p id="feedback"></p>
+<button id="siguiente" class="btn" style="display:none">Siguiente</button>
+</div>
+<script>
+// Fondos genéricos (el usuario podrá reemplazar con imágenes reales)
+const fondos=[
+  "https://images.unsplash.com/photo-1581093448798-5dc89d9a1f5b", // control room
+  "https://images.unsplash.com/photo-1509395176047-4a66953fd231", // wind farm
+  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d", // transmission lines
+  "https://images.unsplash.com/photo-1584270354949-1f1f3f954d87", // generator hall
+  "https://images.unsplash.com/photo-1601297183305-6dfec7bc01c8"
+];
+
+// Preguntas basadas en tu PDF
+const preguntas = [
+  // ESCENARIO 1
+  {
+    header:"ESCENARIO 1 — Incremento abrupto de generación renovable",
+    narrativa:"Un aumento brusco de eólica provoca sobregeneración y frecuencia alta.",
+    pregunta:"¿Cuál es la acción correcta?",
+    opciones:["Comunicar y documentar el aumento brusco.","Desconectar toda la eólica.","Esperar 20 minutos.","Aumentar demanda manualmente."],
+    correcta:0
+  },
+  {
+    header:"Reducción térmica controlada",
+    narrativa:"Debes bajar generación térmica para estabilizar frecuencia.",
+    pregunta:"¿Qué acción corresponde?",
+    opciones:["Reducir térmica con rampa.","Cerrar líneas.","Apagón industrial.","Activar condensadores."],
+    correcta:0
+  },
+  {
+    header:"Verificación de estabilidad",
+    narrativa:"Frecuencia se acerca al rango normal.",
+    pregunta:"¿Qué debe hacerse?",
+    opciones:["Confirmar 60.1 Hz y documentar.","No documentar.","Aumentar térmica.","Esperar 61.5 Hz."],
+    correcta:0
+  },
+
+  // ESCENARIO 2
+  {
+    header:"ESCENARIO 2 — Caída inesperada de demanda",
+    narrativa:"Una fábrica cae y reduce 240 MW abruptamente.",
+    pregunta:"¿Cómo procede el operador?",
+    opciones:["Reportar y activar protocolo.","Esperar.","Aumentar generación.","Desconectar renovables."],
+    correcta:0
+  },
+  {
+    header:"Reducción de oferta",
+    narrativa:"Debes equilibrar oferta y demanda reducida.",
+    pregunta:"Acción correcta:",
+    opciones:["Desconectar 240 MW de respaldo.","Cerrar líneas.","Aumentar voltaje.","Conectar diesel portable."],
+    correcta:0
+  },
+  {
+    header:"Cierre del evento",
+    narrativa:"La demanda comienza a recuperarse.",
+    pregunta:"¿Qué hacer?",
+    opciones:["Monitorear y documentar.","No documentar.","Cerrar líneas.","Dejar generadores desconectados."],
+    correcta:0
+  },
+
+  // ESCENARIO 3
+  {
+    header:"ESCENARIO 3 — Sobrecarga de línea 230 kV",
+    narrativa:"Línea operando al 115% sin su paralela.",
+    pregunta:"¿Qué debe hacer el operador?",
+    opciones:["Reportar y confirmar mantenimiento.","No intervenir.","Aislar región.","Aumentar voltaje."],
+    correcta:0
+  },
+  {
+    header:"Redistribución",
+    narrativa:"Debes aliviar flujo por la línea sobrecargada.",
+    pregunta:"Acción correcta:",
+    opciones:["Bajar hidro norte y subir térmica central.","Cerrar demanda.","Aumentar voltaje.","Desconectar toda la hidro."],
+    correcta:0
+  },
+  {
+    header:"Estabilización",
+    narrativa:"Línea baja al 88% de carga.",
+    pregunta:"¿Qué debe hacerse?",
+    opciones:["Mantener redistribución temporal.","Volver estado anterior.","Cerrar línea paralela.","Detener mantenimiento."],
+    correcta:0
+  },
+
+  // ESCENARIO 4
+  {
+    header:"ESCENARIO 4 — Pérdida de sincronía",
+    narrativa:"Generador oscila entre 59.8 y 60.6 Hz.",
+    pregunta:"Acción inicial correcta:",
+    opciones:["Desconexión urgente.","Esperar.","Ignorar vibraciones.","Ángulo 45° es normal."],
+    correcta:0
+  },
+  {
+    header:"Desconexión controlada",
+    narrativa:"Se debe compensar potencia perdida.",
+    pregunta:"¿Qué hacer?",
+    opciones:["Desconectar y activar 400 MW de respaldo.","Esperar.","No compensar.","Aumentar gen. desincronizado."],
+    correcta:0
+  },
+  {
+    header:"Post-evento",
+    narrativa:"El sistema se estabiliza.",
+    pregunta:"¿Qué hacer?",
+    opciones:["Documentar y verificar.","No documentar.","Reconectar de inmediato.","Desconexión permanente."],
+    correcta:0
+  },
+
+  // ESCENARIO 5
+  {
+    header:"ESCENARIO 5 — Cierre de turno",
+    narrativa:"Preparación de documentación.",
+    pregunta:"¿Qué corresponde?",
+    opciones:["Reporte completo.","Nota rápida.","Omitir eventos.","No documentar."],
+    correcta:0
+  },
+  {
+    header:"Briefing",
+    narrativa:"Transferencia al operador nocturno.",
+    pregunta:"¿Qué incluye?",
+    opciones:["Eventos, restricciones y bitácoras.","Nada.","Leer luego.","Todo normal."],
+    correcta:0
+  },
+  {
+    header:"Firma final",
+    narrativa:"Transferencia de responsabilidad.",
+    pregunta:"¿Qué debe hacerse?",
+    opciones:["Firmar y confirmar comprensión.","Irse sin firmar.","Dar credenciales.","Solo decir 'todo tuyo'."],
+    correcta:0
+  }
+];
+
+let index=0, score=0, lives=3;
+
+function cargarPregunta(){
+ document.getElementById("bg").style.backgroundImage=`url(${fondos[index%fondos.length]})`;
+ const q=preguntas[index];
+ document.getElementById("header").textContent=q.header;
+ document.getElementById("narrativa").textContent=q.narrativa;
+ document.getElementById("pregunta").textContent=q.pregunta;
+ document.getElementById("opciones").innerHTML="";
+ document.getElementById("feedback").textContent="";
+ q.opciones.forEach((t,i)=>{
+   let b=document.createElement("button");
+   b.className="btn";
+   b.textContent=t;
+   b.onclick=()=>verificar(i);
+   document.getElementById("opciones").appendChild(b);
+ });
+}
+
+function actualizar(){
+ document.getElementById("score").innerHTML=`Puntuación: ${score} — Vidas: <span id='lives'>${lives}</span>`;
+}
+
+function verificar(i){
+ if(i===preguntas[index].correcta){ score++; document.getElementById("feedback").style.color="lime"; document.getElementById("feedback").textContent="✓ Correcto";
+ } else {
+   lives--; document.getElementById("feedback").style.color="red"; document.getElementById("feedback").textContent="✗ Incorrecto";
+   if(lives<=0){
+     document.getElementById("game").innerHTML=`<h2>Juego terminado</h2><p>Sin vidas.</p><p>Puntuación final: ${score}/${preguntas.length}</p>`; return;
+   }
+ }
+ actualizar();
+ document.getElementById("siguiente").style.display="block";
+}
+
+document.getElementById("siguiente").onclick=()=>{
+ index++;
+ if(index<preguntas.length){
+   document.getElementById("siguiente").style.display="none";
+   cargarPregunta();
+ } else {
+   document.getElementById("game").innerHTML=`<h2>Juego completado</h2><p>Puntuación final: ${score}/${preguntas.length}</p>`;
+ }
+};
+
+cargarPregunta();
+</script>
+</body>
+</html>

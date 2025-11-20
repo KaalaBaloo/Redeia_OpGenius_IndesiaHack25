@@ -479,3 +479,106 @@ border-radius:4px !important;
 .quiz .small-square{
 border-radius:4px !important;
 }
+
+/* --- Estilos para el feedback interactivo --- */
+
+.options .option {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    background-color: #f8f9fa; /* Fondo claro */
+}
+
+.options .option:hover {
+    background-color: #e9ecef;
+}
+
+/* Respuesta correcta (verde) */
+.options .option.correct-answer {
+    background-color: #d4edda; /* Fondo verde suave */
+    border-color: #c3e6cb;
+    font-weight: bold;
+    color: #155724; /* Texto verde oscuro */
+}
+
+/* Respuesta incorrecta (rojo) */
+.options .option.incorrect-answer {
+    background-color: #f8d7da; /* Fondo rojo suave */
+    border-color: #f5c6cb;
+    color: #721c24; /* Texto rojo oscuro */
+    /* Efecto para opciones incorrectas seleccionadas */
+    opacity: 0.7; 
+}
+
+.simulation {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+.simulation .background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+}
+
+.simulation .message {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    background-color: rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.simulation .input-area {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    width: 90%;
+    max-width: 700px;
+}
+
+.simulation .input-area .bot-icon {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.simulation .input-area input {
+    flex: 1;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+}
+
+.simulation .input-area .send-button {
+    margin-left: 10px;
+    padding: 15px 20px;
+    border-radius: 50%;
+    border: none;
+    background-color: #1e88e5;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
