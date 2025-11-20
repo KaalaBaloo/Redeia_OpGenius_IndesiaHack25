@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redeia - OpGenius</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css"> 
+    <link rel="stylesheet" href="../css/botStyle.css">
 </head>
 <body>
 
@@ -51,40 +54,68 @@
 
 
     <div class="breadcrumb">
-        Inicio <span>&gt;</span> OpGenius
+        Inicio <span>&gt;</span> OpGenius <span>&gt;</span> Sala de Estudio <span>&gt;</span> Material de Estudio
     </div>
 
     <section class="hero">
         <div class="hero-title-bar">
-            OpGenius
-        </div>
-        <div class="hero-image-container">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Sala de control">
+            Material de Estudio
         </div>
     </section>
 
-    <section class="section-discover">
-        <h2>Descubre cómo funciona el sistema eléctrico</h2>
-        <p>
-            Aprende de forma sencilla y práctica cómo se aplican los procedimientos de operación gracias a una plataforma interactiva basada en IA, con simulaciones reales y actividades que facilitan la comprensión de las normas técnicas.
-        </p>
-        <a href="../html/salaEstudio.html"><button class="btn">Accede a la sala de estudio</button></a>
-        
-        <div class="deco-circle"></div>
-    </section>
 
-    <section class="section-challenges">
-        <div class="bg-image"></div>
-        <div class="overlay"></div>
-        
-        <div class="content-wrapper">
-            <h2>Retos y simulaciones</h2>
-            <p>
-                Aprende de forma sencilla y práctica cómo se aplican los procedimientos de operación gracias a una plataforma interactiva basada en IA, con simulaciones reales y actividades que facilitan la comprensión de las normas técnicas.
-            </p>
-            <a href="../html/retosSimulaciones.html"><button class="btn">Ponte a prueba</button></a>
+<div class="container-fluid" style="margin-top: 50px; margin-bottom: 50px;">
+    <div class="row">
+
+        <!-- SIDEBAR IZQUIERDA -->
+        <div class="col-4">
+
+            <div class="sidebar-title mb-3">Listado de Procesos de Operación</div>
+
+            <div class="sidebar-section-title">1. Criterios de funcionamiento y seguridad</div>
+
+            <div class="pdf-item">
+                <span>P.O. 1.1 Criterios de funcionamiento y seguridad para la operación del sistema eléctrico.pdf</span>
+                <span class="icon-download">⬇️</span>
+            </div>
+
+            <div class="pdf-item">
+                <span>P.O. 1.2 Niveles admisibles de carga red</span>
+                <span class="icon-download">⬇️</span>
+            </div>
+
+            <div class="pdf-item">
+                <span>P.O. 1.3 Tensiones admisibles nudos red</span>
+                <span class="icon-download">⬇️</span>
+            </div>
+
+            <div class="pdf-item">
+                <span>P.O. 1.4 Condiciones de entrega de energía en puntos frontera</span>
+                <span class="icon-download">⬇️</span>
+            </div>
+
+            <div class="pdf-item">
+                <span>P.O. 1.5 Establecimiento de la reserva para la regulación frecuencia-potencia</span>
+                <span class="icon-download">⬇️</span>
+            </div>
+
+            <div class="sidebar-section-title">2. Previsión y cobertura de demanda</div>
+            <div class="pdf-item"></div>
+
+            <div class="sidebar-section-title">3. Programación y limitaciones técnicas</div>
+            <div class="pdf-item"></div>
+
         </div>
-    </section>
+
+        <!-- BOT -->
+        <div class="col-8">
+
+             <!-- PEGAR BOT -->
+
+        </div>
+
+    </div>
+</div>
 
     <footer>
         <div class="footer-content">
@@ -92,6 +123,10 @@
             <img src="../media/redeia/footer2.png" alt="Redeia Logo" style="height:50px; cursor:pointer; display: block; margin: 0 auto;">
         </div>
     </footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" charset="UTF-8" defer src="../js/chatbot.js"></script>
 
 </body>
 </html>
