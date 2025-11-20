@@ -431,3 +431,51 @@ header {
         background: #00264d;
         color: rgb(112, 149, 198);
     }
+.quiz h1{
+font-size:26px !important;
+font-weight:600 !important;
+}
+
+
+.quiz .circle{
+background:#0A3A5B !important;
+font-size:20px !important;
+}
+
+
+.quiz .pill{
+background:#0A3A5B !important;
+font-size:15px;
+border-radius:6px;
+}
+
+
+.quiz .subtitle{
+background:#0A3A5B !important;
+border-radius:6px;
+font-size:15px;
+}
+
+
+.quiz .question-box{
+background:white !important;
+border-radius:12px !important;
+border:2px solid #C8DDF0 !important;
+}
+
+
+.quiz .option{
+border-radius:10px !important;
+padding:14px !important;
+font-size:15px !important;
+}
+
+
+.quiz .big-square{
+border-radius:4px !important;
+}
+
+
+.quiz .small-square{
+border-radius:4px !important;
+}
