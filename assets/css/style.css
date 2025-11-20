@@ -256,3 +256,74 @@ header {
     margin-bottom: 30px;
     line-height: 1.6;
 }
+
+.custom-card{
+        border: 1.5px solid #d1dce6;
+        border-radius: 12px;
+        padding: 40px 30px;
+        text-align: center;
+        height: 100%;
+    }
+
+    .icon-circle{
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #053f79;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px auto;
+        color: white;
+        font-size: 42px;
+    }
+
+    .title{
+        color: #053f79;
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .btn-custom{
+        background: #053f79;
+        color: white;
+        padding: 12px 22px;
+        border-radius: 25px;
+        font-weight: bold;
+    }
+
+    .btn-custom:hover{
+        background: #032f5c;
+        color: #fff;
+    }
+
+     .sidebar-title {
+        color: #053f79;
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .sidebar-section-title {
+        font-weight: bold;
+        color: #053f79;
+        margin-top: 20px;
+        font-size: 20px;
+    }
+
+    .pdf-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        border-bottom: 1px solid #cbd5e1;
+        cursor: pointer;
+    }
+
+    .pdf-item:hover {
+        background: #f0f4fa;
+    }
+
+    .icon-download {
+        color: #053f79;
+        font-size: 20px;
+    }
