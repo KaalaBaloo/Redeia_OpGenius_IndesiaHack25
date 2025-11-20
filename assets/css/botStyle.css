@@ -1,189 +1,269 @@
+/* =========================================================
+   VARIABLES GLOBALES
+========================================================= */
+:root {
+    --primary-blue: #0066CC;
+    --secondary-blue: #004C99;
+    --light-blue: #E6F2FF;
+    --dark-gray: #333;
+    --medium-gray: #666;
+    --light-gray: #F5F5F5;
+    --border-gray: #E0E0E0;
 
-/* Estilos generales para el Chatbot */
+    --success-green: #4CAF50;
+    --error-red: #f44336;
+    --warning-orange: #FFA500;
+
+    --radius: 14px;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--light-gray);
+    color: var(--dark-gray);
+    line-height: 1.6;
+}
+
+/* =========================================================
+   WRAPPER DEL CHATBOT
+========================================================= */
 .chatbot-wrapper {
-    --primary-color: #0d47a1;
-    --secondary-color: #f1f1f1;
-    --bot-message-bg: #fff;
-    --user-prompt-bg: #e0f2f1;
-    --text-color: #333;
-    --border-radius: 12px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: calc(100vh - 400px);
+    display: flex;
+    justify-content: center;
+}
 
-    font-family: Arial, sans-serif;
-    background-color: var(--secondary-color);
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+========================================================= */
+.chatbot-container {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    width: 100%;
+    max-width: 650px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.chat-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.chat-header .chat-icon {
+    font-size: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.chat-header h1 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.connection-status {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* =========================================================
+   CUERPO / MENSAJES
+========================================================= */
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+    background: var(--light-gray);
+    scroll-behavior: smooth;
+}
+
+/* Scrollbar */
+.chat-body::-webkit-scrollbar {
+    width: 8px;
+}
+.chat-body::-webkit-scrollbar-thumb {
+    background: var(--border-gray);
+    border-radius: 4px;
+}
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: var(--medium-gray);
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+.message {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------- Bot ---------------- */
+.bot-message {
+    flex-direction: row;
+}
+
+.bot-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-blue);
+    color: white;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-
-/* Contenedor principal del Chatbot */
-.chatbot-wrapper .chatbot-container {
-    margin-top: -80px;
-    width: 90%;
-    max-width: 600px;
-    height: 80vh;
-    min-height: 400px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    border-radius: var(--border-radius);
-    overflow: hidden;
+.bot-message .message-content {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 75%;
 }
 
-/* Encabezado */
-.chatbot-wrapper .chat-header {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
+/* ---------------- Usuario ---------------- */
+.user-message {
+    flex-direction: row-reverse;
 }
 
-.chatbot-wrapper .chat-header h1 {
-    font-size: 1.5em;
-    margin: 0;
+.user-message .message-content {
+    background: var(--light-blue);
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    max-width: 75%;
+    color: var(--dark-gray);
 }
 
-.chatbot-wrapper .chat-header .chat-icon {
-    font-size: 28px;
+/* ---------------- Texto ---------------- */
+.message-content p {
+    margin-bottom: 10px;
 }
-
-/* Cuerpo del chat (mensajes) */
-.chatbot-wrapper .chat-body {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    background-color: #f7f7f7;
-}
-
-/* Mensajes */
-.chatbot-wrapper .message {
-    display: flex;
-    max-width: 85%;
-}
-
-.chatbot-wrapper .bot-message {
-    align-self: flex-start;
-    gap: 10px;
-}
-
-.chatbot-wrapper .bot-avatar {
-    color: var(--primary-color);
-    font-size: 24px;
-    margin-top: 5px;
-}
-
-.chatbot-wrapper .message-content {
-    background-color: var(--bot-message-bg);
-    padding: 15px;
-    border-radius: 15px;
-    border-top-left-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    color: var(--text-color);
-    line-height: 1.4;
-}
-
-.chatbot-wrapper .message-content p {
-    margin: 0 0 10px 0;
-}
-
-.chatbot-wrapper .message-content p:last-child {
+.message-content p:last-child {
     margin-bottom: 0;
 }
 
-.chatbot-wrapper .bot-question {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: bold;
-    margin-bottom: 15px !important;
+/* ---------------- Pregunta inicial ---------------- */
+.bot-question {
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: 16px;
 }
 
-/* Prompt flotante de usuario */
-.chatbot-wrapper .floating-prompt {
-    align-self: center;
-    width: 100%;
-    max-width: 90%;
-    margin: 20px 0;
-}
-
-.chatbot-wrapper .floating-prompt p {
-    background-color: var(--user-prompt-bg);
-    color: var(--text-color);
-    border: 1px solid #ccc;
-    text-align: left;
-    padding: 15px 20px;
-    border-radius: 20px;
-    font-style: italic;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 0;
-}
-
-/* Footer del chat */
-.chatbot-wrapper .chat-footer {
-    padding: 10px 20px;
-    background-color: #fff;
-    border-top: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-}
-
-.chatbot-wrapper .chat-footer input {
-    flex-grow: 1;
-    padding: 12px 15px;
-    border: 1px solid #ccc;
-    border-radius: 25px;
-    font-size: 16px;
-    outline: none;
-    margin-right: 10px;
-}
-
-.chatbot-wrapper .chat-footer button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    display: flex;
+/* ---------------- Floating prompt ---------------- */
+.floating-prompt {
     justify-content: center;
+    width: 100%;
+}
+
+.floating-prompt p {
+    background: var(--light-blue);
+    border: 2px dashed var(--primary-blue);
+    padding: 15px 20px;
+    border-radius: var(--radius);
+    text-align: center;
+    font-style: italic;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.chat-footer {
+    padding: 20px 30px;
+    background: white;
+    border-top: 1px solid var(--border-gray);
+    display: flex;
+    gap: 12px;
     align-items: center;
+}
+
+#user-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid var(--border-gray);
+    border-radius: 24px;
+    font-size: 15px;
+    outline: none;
+}
+#user-input:focus {
+    border-color: var(--primary-blue);
+}
+
+#send-btn {
+    width: 48px;
+    height: 48px;
+    background: var(--primary-blue);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
-
-.chatbot-wrapper .chat-footer button:hover {
-    background-color: #0b3c8f;
+#send-btn:hover {
+    background: var(--secondary-blue);
 }
-
-.chatbot-wrapper .chat-footer .send-icon {
+.send-icon {
+    color: #fff;
     font-size: 24px;
 }
 
-/* Mensajes del Usuario (deben ir a la derecha) */
-.user-message {
-    /* Clave: Alinea el contenedor del mensaje a la derecha */
-    align-self: flex-end; 
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+    .chatbot-container {
+        height: calc(100vh - 260px);
+    }
+    .chat-body {
+        padding: 20px;
+    }
+    .bot-message .message-content,
+    .user-message .message-content {
+        max-width: 90%;
+    }
 }
 
-/* Opcional: Estilo visual para distinguirlo del bot */
-.user-message .message-content {
-    /* Cambia el color de fondo para el mensaje del usuario */
-    background-color: #aecce5; /* Un color suave (verde claro/azul claro) */
-    /* Ajusta los bordes para el efecto de "pico" a la derecha */
-    border-radius: 15px; 
-    border-top-right-radius: 5px; /* Crea el "pico" en la esquina superior derecha */
-}
-
-/* Asegúrate de que los mensajes de usuario no tengan el avatar del bot */
-.user-message .bot-avatar {
-    display: none; 
+@media (max-width: 480px) {
+    .chat-header h1 {
+        font-size: 16px;
+    }
 }
