@@ -1,0 +1,189 @@
+
+/* Estilos generales para el Chatbot */
+.chatbot-wrapper {
+    --primary-color: #0d47a1;
+    --secondary-color: #f1f1f1;
+    --bot-message-bg: #fff;
+    --user-prompt-bg: #e0f2f1;
+    --text-color: #333;
+    --border-radius: 12px;
+
+    font-family: Arial, sans-serif;
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+/* Contenedor principal del Chatbot */
+.chatbot-wrapper .chatbot-container {
+    margin-top: -80px;
+    width: 90%;
+    max-width: 600px;
+    height: 80vh;
+    min-height: 400px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* Encabezado */
+.chatbot-wrapper .chat-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.chatbot-wrapper .chat-header h1 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.chatbot-wrapper .chat-header .chat-icon {
+    font-size: 28px;
+}
+
+/* Cuerpo del chat (mensajes) */
+.chatbot-wrapper .chat-body {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f7f7f7;
+}
+
+/* Mensajes */
+.chatbot-wrapper .message {
+    display: flex;
+    max-width: 85%;
+}
+
+.chatbot-wrapper .bot-message {
+    align-self: flex-start;
+    gap: 10px;
+}
+
+.chatbot-wrapper .bot-avatar {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+.chatbot-wrapper .message-content {
+    background-color: var(--bot-message-bg);
+    padding: 15px;
+    border-radius: 15px;
+    border-top-left-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    color: var(--text-color);
+    line-height: 1.4;
+}
+
+.chatbot-wrapper .message-content p {
+    margin: 0 0 10px 0;
+}
+
+.chatbot-wrapper .message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.chatbot-wrapper .bot-question {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 15px !important;
+}
+
+/* Prompt flotante de usuario */
+.chatbot-wrapper .floating-prompt {
+    align-self: center;
+    width: 100%;
+    max-width: 90%;
+    margin: 20px 0;
+}
+
+.chatbot-wrapper .floating-prompt p {
+    background-color: var(--user-prompt-bg);
+    color: var(--text-color);
+    border: 1px solid #ccc;
+    text-align: left;
+    padding: 15px 20px;
+    border-radius: 20px;
+    font-style: italic;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+/* Footer del chat */
+.chatbot-wrapper .chat-footer {
+    padding: 10px 20px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+}
+
+.chatbot-wrapper .chat-footer input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    margin-right: 10px;
+}
+
+.chatbot-wrapper .chat-footer button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chatbot-wrapper .chat-footer button:hover {
+    background-color: #0b3c8f;
+}
+
+.chatbot-wrapper .chat-footer .send-icon {
+    font-size: 24px;
+}
+
+/* Mensajes del Usuario (deben ir a la derecha) */
+.user-message {
+    /* Clave: Alinea el contenedor del mensaje a la derecha */
+    align-self: flex-end; 
+}
+
+/* Opcional: Estilo visual para distinguirlo del bot */
+.user-message .message-content {
+    /* Cambia el color de fondo para el mensaje del usuario */
+    background-color: #aecce5; /* Un color suave (verde claro/azul claro) */
+    /* Ajusta los bordes para el efecto de "pico" a la derecha */
+    border-radius: 15px; 
+    border-top-right-radius: 5px; /* Crea el "pico" en la esquina superior derecha */
+}
+
+/* Asegúrate de que los mensajes de usuario no tengan el avatar del bot */
+.user-message .bot-avatar {
+    display: none; 
+}

@@ -1,0 +1,258 @@
+/* --- Reset y Variables --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+:root {
+    --primary-blue: #003A70; /* Azul oscuro corporativo */
+    --secondary-teal: #4CD4C6; /* Cian decorativo */
+    --text-dark: #333;
+    --text-light: #666;
+    --bg-light: #f9f9f9;
+}
+
+body {
+    background-color: #fff;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* --- Top Bar (Reintel / Fecha) --- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 40px;
+    font-size: 12px;
+    color: var(--text-light);
+    border-bottom: 1px solid #eee;
+}
+
+.top-links {
+    display: flex;
+    gap: 20px;
+}
+
+.top-data {
+    display: flex;
+    gap: 15px;
+    font-weight: 500;
+}
+
+.stock-up { color: #bfa15f; } /* Color dorado simulado */
+
+/* --- Header Principal (Logo y Menú) --- */
+header {
+    padding: 15px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-container {
+    margin-bottom: 15px;
+}
+
+.logo-redeia {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-blue);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: center; /* Centra todo el bloque */
+    width: 100%;
+    align-items: center;
+    position: relative; /* Necesario para ubicar los iconos a la derecha si se desea */
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px; /* Separación estándar entre elementos */
+    font-weight: 700;
+    color: var(--primary-blue);
+    font-size: 14px;
+}
+
+/* Estilo base de cada elemento del menú */
+.nav-links li { 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+    transition: color 0.3s ease; /* Esto hace que el cambio de color sea suave */
+}
+
+/* Iconos pequeños (flechitas) dentro del menú */
+.nav-links i { 
+    font-size: 10px; 
+    color: #888; 
+    transition: color 0.3s ease;
+}
+
+/* --- LA MAGIA: Efecto Hover --- */
+/* Al pasar el ratón, el texto se pone Cian (OpGenius) */
+.nav-links li:hover {
+    color: var(--secondary-teal); 
+}
+
+/* Al pasar el ratón, la flechita también cambia de color */
+.nav-links li:hover i {
+    color: var(--secondary-teal);
+}
+
+/* El elemento activo se queda fijo en Cian */
+.nav-links .active { 
+    color: var(--secondary-teal); 
+}
+
+/* Iconos de acción (Buscador, Idioma) a la derecha */
+.nav-actions {
+    position: absolute; /* Los fuerza a quedarse a la derecha sin empujar el menú */
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lang-switch { font-weight: bold; color: var(--primary-blue); font-size: 14px; cursor: pointer; }
+.lang-switch span.active { color: var(--secondary-teal); }
+
+/* --- Hero Banner (Título Azul + Imagen) --- */
+.hero-title-bar {
+    background-color: #004B87;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 32px;
+    font-weight: 300;
+}
+
+.hero-image-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.hero-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* --- Sección 1: Descubre --- */
+.section-discover {
+    padding: 80px 20px;
+    text-align: center;
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.section-discover h2 {
+    color: var(--primary-blue);
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.section-discover p {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.btn {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 500;
+    display: inline-block;
+    transition: background 0.3s;
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #002a52;
+}
+
+/* Elemento decorativo (Circulo Cian a la derecha) */
+.deco-circle {
+    position: absolute;
+    right: -200px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 300px;
+    background-color: var(--secondary-teal);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+/* --- Sección 2: Retos y Simulaciones (Fondo Torre) --- */
+.section-challenges {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--primary-blue);
+    margin-top: 50px;
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
+    background-size: cover;
+    background-position: center;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Gradiente para mejorar la legibilidad */
+    background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9));
+    z-index: 0;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.content-wrapper h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.content-wrapper p {
+    color: #444;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
