@@ -1,0 +1,37 @@
+1. Debes colocar backendnuevo.py, requirements.txt y la carpeta documentos_po/ en el mismo directorio en el nuevo servidor.
+
+2. Pasos para la Instalación y Ejecución
+Sigue estos pasos en la terminal del nuevo equipo:
+
+Paso 1: Instalar Python Asegúrate de que el nuevo equipo tenga instalada una versión de Python (idealmente Python 3.11 o superior).
+
+Paso 2: Crear un Entorno Virtual
+
+# Crear un entorno virtual llamado 'venv'
+python -m venv venv
+
+# Activar el entorno
+# En Windows (cmd):
+venv\Scripts\activate
+# En macOS/Linux (bash):
+source venv/bin/actívate
+
+Paso 3: Instalar las Dependencias Con el entorno virtual activado, instala todas las librerías necesarias usando tu archivo requirements.txt:
+
+Instalará flask, langchain, chromadb, etc. 
+pip install -r requirements.txt
+
+
+Paso 5: Ejecutar el Servidor ¡Ya está todo listo! Ejecuta el script:
+
+python backendnuevo.py
+
+
+3. Qué Sucederá al Ejecutarlo
+Ten paciencia durante el primer arranque. El servidor realizará varias tareas:
+
+Descargará el Modelo: La primera vez, HuggingFaceEmbeddings descargará el modelo sentence-transformers/all-MiniLM-L6-v2 (necesitas conexión a internet). Esto puede tardar unos minutos.
+
+Cargará los PDFs: Leerá todos los documentos de la carpeta documentos_po/.
+
+Creará la Base de Datos Vectorial: Procesará y "embeberá" todos los fragmentos de texto en la base de datos de ChromaDB. Verás en la consola mensajes como "Procesando lote..." y "Base de datos vectorial lista.".
