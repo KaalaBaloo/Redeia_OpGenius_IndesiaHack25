@@ -1,3 +1,6 @@
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const simulationMessage = document.getElementById('simulation-message');
     const userInput = document.getElementById('user-input');
@@ -10,17 +13,30 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // El estado del juego se mantendrá en esta variable
     let simulationState = `
-        Estado Actual: Inicio de la simulación. Se ha detectado una desviación de frecuencia.
-        Tarea: Confirmar mediciones, analizar causas y aplicar POs.
-        Instrucción: El usuario debe indicar su primera acción (ej: "Verificar valor actual de frecuencia").
-        Severidad: MEDIA
+        Estado Actual: Inicio de la simulación.
+        Instrucción: El usuario debe indicar su primera acción (ej, analizar, verificar o comprobar estado de la red eléctrica).
     `;
     
     // --- PROMPT DEL SISTEMA ---
     // Este prompt le dice al LLM que se comporte como el motor de la simulación
     const SYSTEM_PROMPT = `
-        Eres un simulador de entrenamiento para operadores del sistema eléctrico español. 
-        Tu objetivo es narrar el progreso de una simulación de evento operativo (como una desviación de frecuencia).
+        Genera simulaciones de operación eléctrica ficticias basadas en los Procedimientos de Operación (PO). Cada simulación debe representar un día completo de trabajo de un operador, dividido en 5 escenarios distintos, por ejemplo: subida de generación renovable, caída de demanda, sobrecarga en línea, variación de frecuencia y cierre de turno, aunque puedes inventar otros escenarios coherentes con los PO.
+
+        Para cada escenario:
+        Narrativa: Explica la situación con suficiente detalle y contexto técnico, de forma realista pero ficticia, como si fuera parte de una jornada completa. No debe superar las 150 palabras.
+        Pista: Una pista por paso que ayude al jugador a completar la acción.
+        Devolución: Texto que se muestra si la respuesta o acción es correcta para el contexto de la simulación.
+
+        Requisitos:
+        Mantener un lenguaje técnico pero accesible.
+        Cada escenario debe ser distinto y coherente con la lógica de los PO, formando una jornada completa.
+        Evitar información sensible o procedimientos reales de operación.
+        La salida debe estar lista para usar como simulación interactiva de Nivel B.
+
+        Formato sugerido de entrega:
+        Escenario 1: Nombre
+        Narrativa
+        Pista
 
         Reglas:
         1. **Evalúa la acción del usuario** basándote en los Procedimientos de Operación (PO).
@@ -112,12 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Iniciar la simulación con un mensaje de bienvenida
     simulationMessage.innerHTML = `
-        **EVENTO INICIADO:** Se ha detectado una desviación de frecuencia fuera de los límites. 
-        Esto podría afectar el balance de generación y consumo.
-        <br><br>
-        **TAREA:** Confirme mediciones, analice causas y aplique las medidas correctivas.
-        <br><br>
-        **Indique su PRIMERA acción operativa (ej: "Verificar la medición de frecuencia en SCADA").**
+        **Indique su PRIMERA acción operativa (ej: "Verificar estado de la red eléctrica").**
     `;
     
     // Ocultar spinner al inicio

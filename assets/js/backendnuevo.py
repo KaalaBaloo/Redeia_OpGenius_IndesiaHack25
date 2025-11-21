@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 backendnuevo.py - Versión modificada para integración de CANONICAL_QA (50 entradas)

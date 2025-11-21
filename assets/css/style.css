@@ -1,4 +1,6 @@
-/* --- Reset y Variables --- */
+/* =========================================
+   1. RESET Y VARIABLES GLOBALES
+   ========================================= */
 * {
     margin: 0;
     padding: 0;
@@ -12,6 +14,9 @@
     --text-dark: #333;
     --text-light: #666;
     --bg-light: #f9f9f9;
+    
+    /* Variables específicas para Ollama Quiz mapeadas a la marca */
+    --ollama-bg: #ecf0f1;
 }
 
 body {
@@ -22,6 +27,10 @@ body {
 
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
+
+/* =========================================
+   2. HEADER Y NAVEGACIÓN
+   ========================================= */
 
 /* --- Top Bar (Reintel / Fecha) --- */
 .top-bar {
@@ -47,7 +56,7 @@ ul { list-style: none; }
 
 .stock-up { color: #bfa15f; } /* Color dorado simulado */
 
-/* --- Header Principal (Logo y Menú) --- */
+/* --- Header Principal --- */
 header {
     padding: 15px 40px;
     display: flex;
@@ -67,57 +76,47 @@ header {
     text-transform: uppercase;
 }
 
+/* --- Menú de Navegación --- */
 .main-nav {
     display: flex;
-    justify-content: center; /* Centra todo el bloque */
+    justify-content: center;
     width: 100%;
     align-items: center;
-    position: relative; /* Necesario para ubicar los iconos a la derecha si se desea */
+    position: relative;
 }
 
 .nav-links {
     display: flex;
-    gap: 40px; /* Separación estándar entre elementos */
+    gap: 40px;
     font-weight: 700;
     color: var(--primary-blue);
     font-size: 14px;
 }
 
-/* Estilo base de cada elemento del menú */
 .nav-links li { 
     cursor: pointer; 
     display: flex; 
     align-items: center; 
     gap: 5px; 
-    transition: color 0.3s ease; /* Esto hace que el cambio de color sea suave */
+    transition: color 0.3s ease;
 }
 
-/* Iconos pequeños (flechitas) dentro del menú */
 .nav-links i { 
     font-size: 10px; 
     color: #888; 
     transition: color 0.3s ease;
 }
 
-/* --- LA MAGIA: Efecto Hover --- */
-/* Al pasar el ratón, el texto se pone Cian (OpGenius) */
-.nav-links li:hover {
+/* Efectos Hover del Menú */
+.nav-links li:hover,
+.nav-links li:hover i,
+.nav-links .active {
     color: var(--secondary-teal); 
 }
 
-/* Al pasar el ratón, la flechita también cambia de color */
-.nav-links li:hover i {
-    color: var(--secondary-teal);
-}
-
-/* El elemento activo se queda fijo en Cian */
-.nav-links .active { 
-    color: var(--secondary-teal); 
-}
-
-/* Iconos de acción (Buscador, Idioma) a la derecha */
+/* Iconos derechos (Buscador, Idioma) */
 .nav-actions {
-    position: absolute; /* Los fuerza a quedarse a la derecha sin empujar el menú */
+    position: absolute;
     right: 0;
     display: flex;
     align-items: center;
@@ -127,7 +126,19 @@ header {
 .lang-switch { font-weight: bold; color: var(--primary-blue); font-size: 14px; cursor: pointer; }
 .lang-switch span.active { color: var(--secondary-teal); }
 
-/* --- Hero Banner (Título Azul + Imagen) --- */
+/* Breadcrumb */
+.breadcrumb {
+    padding: 10px 40px;
+    font-size: 12px;
+    color: var(--text-light);
+}
+.breadcrumb span { margin: 0 5px; }
+
+/* =========================================
+   3. SECCIONES PRINCIPALES (HERO & CONTENT)
+   ========================================= */
+
+/* --- Hero Banner --- */
 .hero-title-bar {
     background-color: #004B87;
     color: white;
@@ -150,7 +161,7 @@ header {
     object-position: center;
 }
 
-/* --- Sección 1: Descubre --- */
+/* --- Sección Descubre --- */
 .section-discover {
     padding: 80px 20px;
     text-align: center;
@@ -189,7 +200,6 @@ header {
     background-color: #002a52;
 }
 
-/* Elemento decorativo (Circulo Cian a la derecha) */
 .deco-circle {
     position: absolute;
     right: -200px;
@@ -203,7 +213,7 @@ header {
     opacity: 0.5;
 }
 
-/* --- Sección 2: Retos y Simulaciones (Fondo Torre) --- */
+/* --- Sección Retos --- */
 .section-challenges {
     position: relative;
     width: 100%;
@@ -234,7 +244,6 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Gradiente para mejorar la legibilidad */
     background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9));
     z-index: 0;
 }
@@ -257,231 +266,206 @@ header {
     line-height: 1.6;
 }
 
-.custom-card{
-        border: 1.5px solid #d1dce6;
-        border-radius: 12px;
-        padding: 40px 30px;
-        text-align: center;
-        height: 100%;
-    }
-
-    .icon-circle{
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: #053f79;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 20px auto;
-        color: white;
-        font-size: 42px;
-    }
-
-    .title{
-        color: #053f79;
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-
-    .btn-custom{
-        background: #053f79;
-        color: white;
-        padding: 12px 22px;
-        border-radius: 25px;
-        font-weight: bold;
-    }
-
-    .btn-custom:hover{
-        background: #032f5c;
-        color: #fff;
-    }
-
-     .sidebar-title {
-        color: #053f79;
-        font-weight: bold;
-        font-size: 22px;
-    }
-
-    .sidebar-section-title {
-        font-weight: bold;
-        color: #053f79;
-        margin-top: 20px;
-        font-size: 20px;
-    }
-
-    .pdf-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px;
-        border-bottom: 1px solid #cbd5e1;
-        cursor: pointer;
-    }
-
-    .pdf-item:hover {
-        background: #f0f4fa;
-    }
-
-    .icon-download {
-        color: #053f79;
-        font-size: 20px;
-    }
-
-    
-    /* Progress Bar */
-    .progress-container {
-        width: 90%;
-        max-width: 1000px;
-        margin: 0 auto 50px auto;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .progress-bar {
-        width: 100%;
-        height: 30px;
-        background: white;
-        border: 3px solid #003366;
-        border-radius: 50px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .progress-fill {
-        width: 57%;
-        height: 100%;
-        background: #003366;
-        border-radius: 50px;
-    }
-
-    .progress-percent {
-        font-size: 22px;
-        font-weight: 700;
-        color: #003366;
-        min-width: 50px;
-        text-align: right;
-    }
-
-    /* Grid */
-    .grid {
-        width: 90%;
-        max-width: 1080px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
-    }
-
-    /* Card */
-    .card {
-        background: white;
-        border-radius: 15px;
-        border: 2px solid #004C99;
-        padding: 20px 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .card-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .number {
-        width: 38px;
-        height: 38px;
-        background: #004C99;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 18px;
-    }
-
-    .card-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #003366;
-        line-height: 1.25;
-    }
-
-    .btn {
-        margin-top: 15px;
-        width: 180px;
-        background: #003366;
-        color: white;
-        padding: 10px 0;
-        border-radius: 40px;
-        text-align: center;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        border: none;
-        align-self: center;
-    }
-
-    .btn:hover {
-        background: #00264d;
-        color: rgb(112, 149, 198);
-    }
-.quiz h1{
-font-size:26px !important;
-font-weight:600 !important;
+/* =========================================
+   4. TARJETAS Y SIDEBAR
+   ========================================= */
+.custom-card {
+    border: 1.5px solid #d1dce6;
+    border-radius: 12px;
+    padding: 40px 30px;
+    text-align: center;
+    height: 100%;
 }
 
-
-.quiz .circle{
-background:#0A3A5B !important;
-font-size:20px !important;
+.icon-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #053f79;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    color: white;
+    font-size: 42px;
 }
 
-
-.quiz .pill{
-background:#0A3A5B !important;
-font-size:15px;
-border-radius:6px;
+.title {
+    color: #053f79;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-
-.quiz .subtitle{
-background:#0A3A5B !important;
-border-radius:6px;
-font-size:15px;
+.btn-custom {
+    background: #053f79;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 25px;
+    font-weight: bold;
 }
 
-
-.quiz .question-box{
-background:white !important;
-border-radius:12px !important;
-border:2px solid #C8DDF0 !important;
+.btn-custom:hover {
+    background: #032f5c;
+    color: #fff;
 }
 
-
-.quiz .option{
-border-radius:10px !important;
-padding:14px !important;
-font-size:15px !important;
+.sidebar-title {
+    color: #053f79;
+    font-weight: bold;
+    font-size: 22px;
 }
 
-
-.quiz .big-square{
-border-radius:4px !important;
+.sidebar-section-title {
+    font-weight: bold;
+    color: #053f79;
+    margin-top: 20px;
+    font-size: 20px;
 }
 
-
-.quiz .small-square{
-border-radius:4px !important;
+.pdf-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid #cbd5e1;
+    cursor: pointer;
 }
 
-/* --- Estilos para el feedback interactivo --- */
+.pdf-item:hover {
+    background: #f0f4fa;
+}
 
+.icon-download {
+    color: #053f79;
+    font-size: 20px;
+}
+
+/* --- Progress Bar --- */
+.progress-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto 50px auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background: white;
+    border: 3px solid #003366;
+    border-radius: 50px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    width: 57%;
+    height: 100%;
+    background: #003366;
+    border-radius: 50px;
+}
+
+.progress-percent {
+    font-size: 22px;
+    font-weight: 700;
+    color: #003366;
+    min-width: 50px;
+    text-align: right;
+}
+
+/* --- Grids y Cards Generales --- */
+.grid {
+    width: 90%;
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    border: 2px solid #004C99;
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.number {
+    width: 38px;
+    height: 38px;
+    background: #004C99;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #003366;
+    line-height: 1.25;
+}
+
+/* =========================================
+   5. ESTILOS ESPECÍFICOS DEL QUIZ
+   ========================================= */
+
+.quiz h1 {
+    font-size: 26px !important;
+    font-weight: 600 !important;
+}
+
+.quiz .circle {
+    background: #0A3A5B !important;
+    font-size: 20px !important;
+}
+
+.quiz .pill {
+    background: #0A3A5B !important;
+    font-size: 15px;
+    border-radius: 6px;
+}
+
+.quiz .subtitle {
+    background: #0A3A5B !important;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.quiz .question-box {
+    background: white !important;
+    border-radius: 12px !important;
+    border: 2px solid #C8DDF0 !important;
+}
+
+.quiz .option {
+    border-radius: 10px !important;
+    padding: 14px !important;
+    font-size: 15px !important;
+}
+
+.quiz .big-square,
+.quiz .small-square {
+    border-radius: 4px !important;
+}
+
+/* Feedback Interactivo */
 .options .option {
     padding: 15px;
     margin-bottom: 10px;
@@ -489,30 +473,32 @@ border-radius:4px !important;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
-    background-color: #f8f9fa; /* Fondo claro */
+    background-color: #f8f9fa;
 }
 
 .options .option:hover {
     background-color: #e9ecef;
 }
 
-/* Respuesta correcta (verde) */
+/* RESPUESTA CORRECTA */
 .options .option.correct-answer {
-    background-color: #d4edda; /* Fondo verde suave */
+    background-color: #d4edda;
     border-color: #c3e6cb;
     font-weight: bold;
-    color: #155724; /* Texto verde oscuro */
+    color: #155724;
 }
 
-/* Respuesta incorrecta (rojo) */
+/* RESPUESTA INCORRECTA (ROJO CONSERVADO) */
 .options .option.incorrect-answer {
-    background-color: #f8d7da; /* Fondo rojo suave */
+    background-color: #f8d7da;
     border-color: #f5c6cb;
-    color: #721c24; /* Texto rojo oscuro */
-    /* Efecto para opciones incorrectas seleccionadas */
+    color: #721c24;
     opacity: 0.7; 
 }
 
+/* =========================================
+   6. SIMULACIÓN Y SEMANAL
+   ========================================= */
 .simulation {
     position: relative;
     width: 100%;
@@ -581,4 +567,277 @@ border-radius:4px !important;
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
+}
+
+.semanal {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px;
+}
+
+.semanal .card {
+    width: 45%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.semanal .icon {
+    font-size: 40px;
+    color: #0046ad;
+    margin-bottom: 15px;
+}
+
+.semanal .icon span {
+    display: inline-block;
+}
+
+.semanal h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0046ad;
+    margin-bottom: 10px;
+}
+
+.semanal p {
+    font-size: 16px;
+    color: #555555;
+    line-height: 1.5;
+}
+
+.semanal button {
+    padding: 10px 20px;
+    background-color: #0046ad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+.semanal button:hover {
+    background-color: #003380;
+}
+
+.semanal .quiz { border-left: 5px solid #0046ad; }
+.semanal .simulacion { border-left: 5px solid #00b0ff; }
+
+/* =========================================
+   7. OLLAMA QUIZ (ESTILOS ESPECÍFICOS)
+   ========================================= */
+
+/* Redefinición de variables para eliminar naranja */
+.ollamaquiz {
+    --primary: var(--primary-blue); /* Antes gris/azul */
+    --accent: var(--primary-blue);  /* Antes naranja - CAMBIADO A AZUL */
+    --bg: var(--ollama-bg);
+}
+
+.ollamaquiz body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.ollamaquiz .container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 650px;
+    text-align: center;
+}
+
+.ollamaquiz h1 {
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.ollamaquiz .badge {
+    background: var(--primary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ollamaquiz input, .ollamaquiz select {
+    padding: 12px;
+    margin: 10px 0;
+    width: 100%;
+    border: 2px solid #dfe6e9;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.ollamaquiz input:focus, .ollamaquiz select:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+/* Botones Ollama */
+.ollamaquiz .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.ollamaquiz .btn:hover {
+    background: #000ed3;
+    transform: translateY(-2px);
+}
+
+.ollamaquiz .btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Opciones del Quiz */
+.ollamaquiz .option-btn {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    background: white;
+    border: 2px solid #dfe6e9;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    transition: 0.2s;
+    color: #2c3e50;
+}
+
+.ollamaquiz .option-btn:hover {
+    border-color: var(--primary);
+    background: #f8f9fa;
+}
+
+/* Correcto / Incorrecto en Ollama */
+.ollamaquiz .correct {
+    background: #2785ae !important;
+    color: white !important;
+    border-color: #2768ae !important;
+}
+
+/* INCORRECTO (ROJO CONSERVADO) */
+.ollamaquiz .incorrect {
+    background: #c02b5a !important;
+    color: white !important;
+    border-color: #c02b53 !important;
+}
+
+.ollamaquiz .screen {
+    display: none;
+    animation: fadeIn 0.4s;
+}
+
+.ollamaquiz .active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.ollamaquiz .loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--accent);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.ollamaquiz .status-log {
+    font-family: monospace;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* =========================================
+   8. PANTALLA DE CARGA (OVERLAY)
+   ========================================= */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.spinner-brand {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #e0e0e0;
+    border-top: 6px solid var(--primary-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: var(--primary-blue);
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* --- Feedback de Respuestas (Verde y Rojo) --- */
+
+/* Respuesta CORRECTA: Verde */
+.ollamaquiz .correct {
+    background-color: #28a745 !important; /* Verde Bootstrap */
+    color: white !important;
+    border-color: #28a745 !important;
+}
+
+/* Respuesta INCORRECTA: Rojo */
+.ollamaquiz .incorrect {
+    background-color: #dc3545 !important; /* Rojo Bootstrap */
+    color: white !important;
+    border-color: #dc3545 !important;
+}
+
+/* Asegurar que el texto se lea bien */
+.ollamaquiz .option-btn {
+    font-weight: 500;
+    transition: all 0.3s ease;
 }

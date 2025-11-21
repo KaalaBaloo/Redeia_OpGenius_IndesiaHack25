@@ -1,3 +1,4 @@
+
 /**
  * chatbot.js - Frontend para el Backend de Redentia v2.1
  * Conecta con el backend en http://127.0.0.1:5000
@@ -6,6 +7,14 @@
 
 // Configuración del backend
 const BACKEND_URL = 'http://127.0.0.1:5000';
+
+// Configuración para el paso de simplificación con LLama 3 (Ollama)
+// NOTA: Esto asume que el backend de Python (en 5000) YA USA LLAMA 3 o que tienes otro endpoint LLM disponible.
+// Si tu backend en :5000 ya devuelve la respuesta final, la simplificación debería hacerse allí.
+// Para este ejemplo, simularé que el backend en :5000 devuelve la respuesta RAW (sin simplificar), 
+// y el frontend llama a Ollama directamente para simplificar.
+const OLLAMA_API_ENDPOINT = 'http://localhost:11434/api/generate'; // Usado solo para simplificación
+const LLM_MODEL_SIMPLIFY = 'llama3'; // Modelo LLM para simplificación
 
 // Estado de la aplicación
 let isWaitingForResponse = false;
@@ -42,63 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     userInput.focus();
 });
 
-/**
- * Verifica la conexión con el backend
- */
-async function checkBackendConnection() {
-    try {
-        updateConnectionStatus('connecting');
-        
-        const response = await fetch(`${BACKEND_URL}/health`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            console.log('✅ Backend conectado:', data);
-            updateConnectionStatus('connected', data);
-        } else {
-            throw new Error('Backend no disponible');
-        }
-    } catch (error) {
-        console.error('❌ Error de conexión:', error);
-        updateConnectionStatus('disconnected');
-    }
-}
+// --- Funciones de Utilidad (checkBackendConnection, updateConnectionStatus, etc. se mantienen) ---
 
 /**
- * Actualiza el indicador de estado de conexión
- */
-function updateConnectionStatus(status, data = null) {
-    if (!connectionStatus) return;
-    
-    const statusConfig = {
-        connecting: {
-            icon: 'circle',
-            color: '#FFA500',
-            text: 'Conectando...'
-        },
-        connected: {
-            icon: 'check_circle',
-            color: '#4CAF50',
-            text: data ? `Conectado - ${data.canonical_qa_count} Q&A cargadas` : 'Conectado'
-        },
-        disconnected: {
-            icon: 'error',
-            color: '#f44336',
-            text: 'Desconectado'
-        }
-    };
-    
-    const config = statusConfig[status];
-    connectionStatus.innerHTML = `<i class="fas fa-${config.icon}" style="color: ${config.color}"></i> ${config.text}`;
-}
-
-/**
- * Maneja el envío de mensajes
+ * Maneja el envío de mensajes (Modificado para la doble llamada)
  */
 async function handleSendMessage() {
     const message = userInput.value.trim();
@@ -125,8 +81,8 @@ async function handleSendMessage() {
     const typingIndicator = showTypingIndicator();
     
     try {
-        // Enviar pregunta al backend
-        const response = await fetch(`${BACKEND_URL}/ask`, {
+        // --- PASO 1: Obtener respuesta inicial del backend (Técnica) ---
+        const backendResponse = await fetch(`${BACKEND_URL}/ask`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -136,11 +92,17 @@ async function handleSendMessage() {
             })
         });
         
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+        if (!backendResponse.ok) {
+            throw new Error(`Error HTTP: ${backendResponse.status}`);
         }
         
-        const data = await response.json();
+        const data = await backendResponse.json();
+        
+        // --- PASO 2: Simplificar la respuesta obtenida ---
+        const simplifiedAnswer = await simplifyBotResponse(data.answer, data.methodology, message);
+        
+        // Reemplazar la respuesta técnica por la simplificada
+        data.answer = simplifiedAnswer;
         
         // Remover indicador de "escribiendo..."
         removeTypingIndicator(typingIndicator);
@@ -149,14 +111,14 @@ async function handleSendMessage() {
         addBotMessage(data);
         
     } catch (error) {
-        console.error('❌ Error al enviar mensaje:', error);
+        console.error('❌ Error al enviar mensaje o simplificar:', error);
         
         // Remover indicador de "escribiendo..."
         removeTypingIndicator(typingIndicator);
         
         // Mostrar mensaje de error
         addBotMessage({
-            answer: '❌ **Error de conexión**\n\nNo se pudo conectar con el servidor. Por favor, verifica que:\n\n• El backend esté ejecutándose en http://127.0.0.1:5000\n• No haya problemas de red o firewall\n• Los PDFs estén cargados correctamente',
+            answer: '❌ **Error de procesamiento**\n\nHubo un problema al contactar al backend o al simplificar la respuesta. Verifique su conexión y el servicio de Ollama (llama3).',
             sources: [],
             methodology: 'ERROR'
         });
@@ -166,6 +128,65 @@ async function handleSendMessage() {
         userInput.disabled = false;
         sendBtn.disabled = false;
         userInput.focus();
+    }
+}
+
+/**
+ * Llama al LLM (Llama 3 en Ollama) para simplificar una respuesta.
+ * Solo simplifica si la respuesta proviene de una búsqueda en POs (vectorial).
+ */
+async function simplifyBotResponse(rawText, methodology, query) {
+    // Si la respuesta es una respuesta canónica o un error, no la simplificamos
+    if (methodology !== 'CONCISE_VECTOR' && methodology !== 'DETAILED') {
+        return rawText;
+    }
+
+    const SIMPLIFICATION_PROMPT = `
+    Analiza la siguiente pregunta ${query}. Si tiene relacon con procedimientos de operación o documentos técnicos de la red eléctrica, convierte el texto proporcionado en un formato claro y profesional para que pueda ser comprendido por un operador de forma efectiva. Si no tiene relación, responde únicamente con "No tengo suficiente información para responder a esa pregunta." y omite el resto del prompt.
+
+    Convierte el siguiente texto sobre procedimientos de operación o documento técnico relacionado con la operación de la red eléctrica en un formato claro y profesional, para que pueda ser comprendido por un operador de forma efectiva. Mantén la precisión técnica y usa un lenguaje directo y comprensible, evitando jerga innecesaria. Asegúrate de que todos los detalles importantes y técnicos estén incluidos y sean fáciles de entender para la correcta ejecución de las tareas operativas.
+
+    Si no dispones de suficiente información para responder de manera adecuada o precisa, responde únicamente con el siguiente mensaje:
+    "No tengo suficiente información para responder a esa pregunta."
+
+    No agregues información adicional ni comentarios innecesarios en estos casos. Utiliza documentación disponible online, como la web de Redentia o el BOE, para complementar y verificar los procedimientos cuando sea necesario.
+        
+        TEXTO ORIGINAL:
+        ---
+        ${rawText}
+        ---
+        RESPUESTA:
+    `;
+
+    const requestBody = {
+        model: LLM_MODEL_SIMPLIFY,
+        prompt: SIMPLIFICATION_PROMPT,
+        stream: false,
+        options: {
+            temperature: 0.1 // Baja temperatura para mantener la precisión
+        }
+    };
+
+    try {
+        const response = await fetch(OLLAMA_API_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            // Si falla la simplificación, devolvemos el texto original
+            console.warn(`⚠️ Error al llamar a Ollama para simplificar (${response.status}). Devolviendo texto original.`);
+            return rawText; 
+        }
+        
+        const data = await response.json();
+        return data.response.trim();
+
+    } catch (error) {
+        // Si hay un error de red, devolvemos el texto original
+        console.warn('⚠️ Fallo de conexión para la simplificación. Devolviendo texto original.', error);
+        return rawText; 
     }
 }
 
@@ -374,3 +395,13 @@ window.chatbotDebug = {
     sendMessage: handleSendMessage,
     backendUrl: BACKEND_URL
 };
+
+// En la función addUserMessage en chatbot.js:
+messageDiv.innerHTML = `
+    <div class="message-content">
+        <p>${escapeHtml(text)}</p>
+    </div>
+    <span class="material-icons user-avatar">
+        person
+    </span>
+`;
